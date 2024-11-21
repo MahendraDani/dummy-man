@@ -1,6 +1,6 @@
 import { Sparkles } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { Button } from "../ui/button";
+import { Button } from "./button";
 import {
   Dialog,
   DialogClose,
@@ -9,7 +9,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
+} from "./dialog";
 import { cn } from "../../lib/utils";
 
 export const CommandModal = () => {
