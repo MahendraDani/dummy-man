@@ -3,7 +3,7 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
+    "baseUrl": "./entrypoints",
     "paths": {
       "@/*": ["./*"]
     }
