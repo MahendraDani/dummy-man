@@ -9,6 +9,10 @@ export default defineContentScript({
   },
 });
 
+// Background : #1C1C1C
+// Select/hove : #282828
+// Text :
+
 function initializeSelectionListener(): void {
   let timeout: number | undefined;
 
@@ -134,23 +138,60 @@ export function createModal(selectedText: string): void {
   // Create modal
   const modal = document.createElement("div");
   modal.id = "modal";
-  modal.style.width = "32rem";
-  modal.style.height = "40rem";
+  modal.style.width = "36rem";
+  modal.style.height = "28rem";
   modal.style.backgroundColor = "white";
-  modal.style.padding = "20px";
+  modal.style.padding = "0px";
   modal.style.borderRadius = "5px";
   modal.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.1)";
   modal.style.display = "flex";
   modal.style.flexDirection = "column";
 
-  // Create search bar
-  const searchBar = document.createElement("input");
-  searchBar.type = "text";
-  searchBar.placeholder = "Search...";
-  searchBar.style.marginBottom = "20px";
-  searchBar.style.padding = "10px";
-  searchBar.style.border = "1px solid #ccc";
-  searchBar.style.borderRadius = "5px";
+  // Create modal header
+  const modalHeader = document.createElement("div");
+  modalHeader.style.width = "auto";
+  modalHeader.style.padding = "6px";
+  modalHeader.style.minHeight = "32px";
+  modalHeader.style.borderBottom = "1px solid black";
+  modalHeader.style.display = "flex";
+  modalHeader.style.justifyContent = "start";
+  modalHeader.style.gap = "16px";
+  modalHeader.style.alignItems = "center";
+
+  const backButton = document.createElement("button");
+  backButton.textContent = "Back";
+
+  const searchForm = document.createElement("form");
+  searchForm.style.flex = "1"; // Automatically take the remaining width
+  searchForm.style.display = "flex";
+  searchForm.style.justifyContent = "center"; // Center align the search input
+
+  const searchFormChildren = document.createElement("div");
+  searchFormChildren.style.width = "100%";
+  searchFormChildren.style.height = "fit-content";
+  searchFormChildren.style.display = "flex";
+  searchFormChildren.style.justifyContent = "space-between";
+  searchFormChildren.style.alignItems = "center";
+  searchFormChildren.style.gap = "6px";
+
+  const searchInput = document.createElement("input");
+  searchInput.className = "";
+  searchInput.type = "text";
+  searchInput.placeholder = "Write the next paragraph...";
+  searchInput.style.flex = "1"; // Take the remaining width
+  searchInput.style.border = "none";
+  searchInput.style.outline = "none";
+
+  const searchButton = document.createElement("button");
+  searchButton.type = "button";
+  searchButton.textContent = "ask AI";
+
+  searchFormChildren.appendChild(searchInput);
+  searchFormChildren.appendChild(searchButton);
+  searchForm.appendChild(searchFormChildren);
+
+  modalHeader.appendChild(backButton);
+  modalHeader.appendChild(searchForm);
 
   // Create list container
   const listContainer = document.createElement("div");
@@ -162,7 +203,7 @@ export function createModal(selectedText: string): void {
   addPromptButtons(listContainer, selectedText);
 
   // Append search bar and list container to modal
-  modal.appendChild(searchBar);
+  modal.appendChild(modalHeader);
   modal.appendChild(listContainer);
 
   // Append modal to overlay
@@ -186,25 +227,45 @@ function addPromptButtons(
   listContainer: HTMLElement,
   selectedText: string
 ): void {
-  const promptTypes = [
-    "EXPLAIN_LIKE_FIVE",
-    "EXPLAIN_TOPIC",
-    "LIST_TAKEAWAYS",
-    "LONG_SUMMARY",
-    "REPHRASE_FOR_REFERENCE",
-    "SINGLE_PARAGRAPH",
-    "SHORT_SUMMARY",
-    "CUSTOM_PROMPT",
+  const defaultPrompts = [
+    {
+      text : "Explain like I am five years old",
+      promptType : "EXPLAIN_LIKE_FIVE",
+    },
+    {
+      text : "Explain the topic",
+      promptType : "EXPLAIN_TOPIC",
+    },
+    {
+      text : "List key takeaways",
+      promptType : "LIST_TAKEAWAYS",
+    },
+    {
+      text : "Write a longer summary",
+      promptType : "LONG_SUMMARY",
+    },
+    {
+      text : "Rephrase it to use as a reference",
+      promptType : "REPHRASE_FOR_REFERENCE",
+    },
+    {
+      text : "Rewrite in a single paragraph",
+      promptType : "SINGLE_PARAGRAPH",
+    },
+    {
+      text : "Write a short summary",
+      promptType : "SHORT_SUMMARY",
+    }
   ];
 
-  promptTypes.forEach((promptType) => {
+  defaultPrompts.forEach((prompt) => {
     const listItemButton = document.createElement("button");
-    listItemButton.textContent = promptType;
+    listItemButton.textContent = prompt.text;
     listItemButton.style.padding = "10px";
     listItemButton.style.border = "1px solid #ccc";
     listItemButton.style.marginBottom = "5px";
     listItemButton.style.width = "100%";
-    listItemButton.setAttribute("data-promptType", promptType);
+    listItemButton.setAttribute("data-promptType", prompt.promptType);
     listItemButton.addEventListener("click", () => {
       const promptType = listItemButton.getAttribute("data-promptType");
       if (promptType) {
@@ -212,7 +273,7 @@ function addPromptButtons(
         makeFetchRequest({ promptType, prompt: selectedText });
       }
     });
-    listContainer.appendChild(listItemButton);
+    // listContainer.appendChild(listItemButton);
   });
 }
 
