@@ -5,21 +5,9 @@ import {
   SystemMessage,
   UserMessage,
 } from "@hypermode/modus-sdk-as/models/openai/chat";
-import { auth } from "@hypermode/modus-sdk-as"
 
 export function sayHello(name: string): string {
   return `Welcome Chief! ${name}!`;
-}
-
-@json
-export class ExampleClaims {
-  public sub!: string
-  public exp!: i64
-  public iat!: i64
-}
-
-export function getClaims(): ExampleClaims {
-  return auth.getJWTClaims<ExampleClaims>()
 }
 
 const modelName: string = "text-generator";
