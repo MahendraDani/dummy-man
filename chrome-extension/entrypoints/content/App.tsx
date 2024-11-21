@@ -1,3 +1,5 @@
+import { Button } from "../components/ui/button";
+import { CommandModal } from "../components/ui/command-modal";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
@@ -75,27 +77,25 @@ export default () => {
   console.log(selectedText);
 
   return (
-    // <div>
-    //   {showButton && (
-    //     <button
-    //       style={{
-    //         position: "absolute",
-    //         top: buttonPosition.top,
-    //         left: buttonPosition.left,
-    //       }}
-    //       className="z-[10000] bg-red-400"
-    //       onClick={handleButtonClick}
-    //     >
-    //       Show Selection
-    //     </button>
-    //   )}
-    //   {/* {showModal && (
-    //     <div className="fixed w-full h-[100vh] z-[100000] bg-black/60 flex justify-center items-center">
-    //       <Modal onClose={handleCloseModal} />
-  
-    //     </div>
-    //   )} */}
-    // </div>
-    <div>Hello World</div>
+    <div>
+      {/* {showButton && (
+        <button
+          style={{
+            position: "absolute",
+            top: buttonPosition.top,
+            left: buttonPosition.left,
+          }}
+          className="z-[10000] bg-red-400"
+          onClick={handleButtonClick}
+        >
+          Show Selection
+        </button>
+      )}
+      {showModal && (
+        <CommandModal/>
+      )} */}
+      <CommandModal/>
+      <Button>Click Me</Button>
+    </div>
   );
 };
