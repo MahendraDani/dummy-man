@@ -1,7 +1,4 @@
-import {
-  Sparkles,
-  User,
-} from "lucide-react";
+import { ArrowUpRight, Sparkles, User } from "lucide-react";
 
 import {
   CommandDialog,
@@ -18,6 +15,33 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { formSchema } from "../lib/schema";
 import { z } from "zod";
+import { CommandSeparator } from "cmdk";
+
+type Store = {
+  promptType: string;
+  prompt: string;
+  response: string;
+  createdAt: string;
+  websiteURL: string;
+};
+
+const SOCIALS = [
+  {
+    name: "GitHub",
+    username: "@MahendraDani",
+    handle: "https://github.com/MahendraDani",
+  },
+  {
+    name: "Linkedin",
+    username: "@mahendra-dani",
+    handle: "https://linkedin.com/in/mahendra-dani",
+  },
+  {
+    name: "Hashnode",
+    username: "@Mahendra09",
+    handle: "https://hashnode.com/@Mahendra09",
+  },
+];
 
 export const CommandModal = () => {
   const [open, setOpen] = useState(false);
@@ -26,6 +50,7 @@ export const CommandModal = () => {
   const [buttonPosition, setButtonPosition] = useState({ top: 0, left: 0 });
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
+  const [websiteURL, setWebsiteURL] = useState<string>("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -33,20 +58,34 @@ export const CommandModal = () => {
       promptType: "",
     },
   });
+  const saveResponseToLocalStorage = (
+    response: string,
+    promptType: string,
+    selectedText: string,
+  ) => {
+    const store: Store = {
+      promptType,
+      prompt: selectedText,
+      response,
+      createdAt: new Date().toISOString(),
+      websiteURL: websiteURL,
+    };
+    localStorage.setItem("response", JSON.stringify(store));
+  };
 
-
-  const onSubmit = async ({promptType}: z.infer<typeof formSchema>) => {
+  const onSubmit = async ({ promptType }: z.infer<typeof formSchema>) => {
     const storedSelectedText = localStorage.getItem("selectedText") || "";
     // Debugging statement
-    console.log("Submitting with selectedText:", storedSelectedText); 
+    console.log("Submitting with selectedText:", storedSelectedText);
+    setWebsiteURL(window.location.href);
     setLoading(true);
     setResponse(null);
     try {
-      const res = await fetch('http://localhost:8686/graphql', {
-        method: 'POST',
+      const res = await fetch("http://localhost:8686/graphql", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization' : `Bearer ${import.meta.env.WXT_API_KEY}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.WXT_API_KEY}`,
         },
         body: JSON.stringify({
           query: `
@@ -63,12 +102,14 @@ export const CommandModal = () => {
       const result = await res.json();
       setResponse(result.data.askAI);
     } catch (error) {
-      console.error('Error:', error);
-      setResponse('An error occurred. Please try again.');
+      console.error("Error:", error);
+      setResponse("An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  console.log(JSON.parse(localStorage.getItem("conversation") || "[]"));
 
   const handleCommandItemClick = (promptType: string) => {
     form.setValue("promptType", promptType);
@@ -84,7 +125,10 @@ export const CommandModal = () => {
         localStorage.setItem("selectedText", selectedText);
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
-        setButtonPosition({ top: rect.top + window.scrollY, left: rect.left + window.scrollX });
+        setButtonPosition({
+          top: rect.top + window.scrollY,
+          left: rect.left + window.scrollX,
+        });
         setShowButton(true);
       } else {
         setShowButton(false);
@@ -115,14 +159,15 @@ export const CommandModal = () => {
 
   return (
     <>
-      {showButton && (
+      {/* {showButton && (
         <Button
           style={{ position: "absolute", top: buttonPosition.top, left: buttonPosition.left }}
           onClick={() => setOpen(true)}
+          className="z-[1000]"
         >
-          Open Command
+        <Sparkles height={4} width={4} className="text-violet-500/20" />  
         </Button>
-      )}
+      )} */}
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Type a command or search..." />
         {loading ? (
@@ -134,14 +179,31 @@ export const CommandModal = () => {
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Suggestions">
               {DEFAULT_PROMPTS.map((prompt, i) => (
-                <CommandItem key={i} onSelect={() => handleCommandItemClick(prompt.promptType)}>
-                  <Sparkles height={4} width={4} className="text-violet-500/20" />
+                <CommandItem
+                  key={i}
+                  onSelect={() => handleCommandItemClick(prompt.promptType)}
+                >
+                  <Sparkles
+                    height={4}
+                    width={4}
+                    className="text-violet-500/20"
+                  />
                   <span>{prompt.text}</span>
                 </CommandItem>
               ))}
             </CommandGroup>
           </CommandList>
         )}
+        <CommandSeparator />
+        <div className="text-sm border-t px-4 py-1 text-muted-foreground flex justify-between items-center">
+          <span>Developed By Mahendra</span>
+          <div className="flex justify-center items-center gap-3 hover:text-gray-800">{SOCIALS.map((social,i)=>(
+            <div className="flex justify-center items-center gap-1">
+              <a key={i} href={social.handle} target="_blank">{social.name}</a>
+              <ArrowUpRight height={12} width={12} className="text-muted-foreground hover:text-gray-800" />
+            </div>
+          ))}</div>
+        </div>
       </CommandDialog>
     </>
   );
