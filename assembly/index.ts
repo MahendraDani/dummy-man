@@ -33,8 +33,7 @@ export function askAI(promptType: string, prompt: string): string {
   } else if (promptType === "LONG_SUMMARY") {
     systemPrompt = `You will be provided with a text or multiple paragraphs. 
     Please summarise the provided text based on the subject and topics 
-    explained in the text within 200-250 words. Explain the core topics in-depth and how they are used in the provided text. The summary should be in-depth and detailed based on the context provided in the text. Please provide bullet-points and analogies if necessary 
-    for better understanding.`;
+    explained in the text within 200-250 words. Explain the core topics in-depth and how they are used in the provided text. The summary should be in-depth and detailed based on the context provided in the text. Please provide bullet-points and analogies if necessary for better understanding.`;
   } else if (promptType === "SHORT_SUMMARY") {
     systemPrompt = `You will be provided with a text or multiple paragraphs. Please summarise the provided text based on the subject and topics explained in the text within 30-50 words. The summary should be short, concise and easy to understand.`;
   } else if (promptType === "REPHRASE_FOR_REFERENCE") {

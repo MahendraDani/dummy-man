@@ -1,6 +1,8 @@
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "../../global.css"
+import {client} from "./apollo-client"
+import { ApolloProvider } from "@apollo/client";
 
 export default defineContentScript({
   matches: ["*://*/*"],
@@ -18,7 +20,11 @@ export default defineContentScript({
         container.append(wrapper);
 
         const root = ReactDOM.createRoot(wrapper);
-        root.render(<App />);
+        root.render(
+          <ApolloProvider client={client}>
+            <App />
+          </ApolloProvider>
+        );
         return { root, wrapper };
       },
       onRemove: (elements) => {

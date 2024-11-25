@@ -1,9 +1,4 @@
 import {
-  Calculator,
-  Calendar,
-  CreditCard,
-  Settings,
-  Smile,
   Sparkles,
   User,
 } from "lucide-react";
@@ -15,8 +10,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "../components/ui/command";
 import { useState, useEffect } from "react";
 import { Button } from "../components/ui/button";
@@ -25,7 +18,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { formSchema } from "../lib/schema";
 import { z } from "zod";
-
 
 export const CommandModal = () => {
   const [open, setOpen] = useState(false);
@@ -43,9 +35,10 @@ export const CommandModal = () => {
   });
 
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+  const onSubmit = async ({promptType}: z.infer<typeof formSchema>) => {
     const storedSelectedText = localStorage.getItem("selectedText") || "";
-    console.log("Submitting with selectedText:", storedSelectedText); // Debugging statement
+    // Debugging statement
+    console.log("Submitting with selectedText:", storedSelectedText); 
     setLoading(true);
     setResponse(null);
     try {
@@ -62,7 +55,7 @@ export const CommandModal = () => {
             }
           `,
           variables: {
-            promptType: data.promptType,
+            promptType: promptType,
             prompt: storedSelectedText,
           },
         }),
@@ -94,9 +87,6 @@ export const CommandModal = () => {
         setButtonPosition({ top: rect.top + window.scrollY, left: rect.left + window.scrollX });
         setShowButton(true);
       } else {
-        // console.log("I am running")
-        // setSelectedText("");
-        // localStorage.removeItem("selectedText");
         setShowButton(false);
       }
     };
@@ -108,6 +98,8 @@ export const CommandModal = () => {
           setOpen(true);
         }
       } else if (e.key === "Escape") {
+        setSelectedText("");
+        setResponse(null);
         setOpen(false);
       }
     };
@@ -136,24 +128,17 @@ export const CommandModal = () => {
         {loading ? (
           <div className="p-4">AI is typing...</div>
         ) : response ? (
-          <div className="p-4 prose">{response}</div>
+          <article className="p-4 prose">{response}</article>
         ) : (
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Suggestions">
               {DEFAULT_PROMPTS.map((prompt, i) => (
                 <CommandItem key={i} onSelect={() => handleCommandItemClick(prompt.promptType)}>
-                  <Calendar />
+                  <Sparkles height={4} width={4} className="text-violet-500/20" />
                   <span>{prompt.text}</span>
                 </CommandItem>
               ))}
-            </CommandGroup>
-            <CommandSeparator />
-            <CommandGroup heading="Settings">
-              <CommandItem>
-                <User />
-                <span>Profile</span>
-              </CommandItem>
             </CommandGroup>
           </CommandList>
         )}
