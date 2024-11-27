@@ -1,29 +1,21 @@
-import { ArrowUpRight, Sparkles, User } from "lucide-react";
-
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
+import React, { useState, useEffect } from "react";
+import { ArrowUpRight, Sparkles, ArrowLeft } from "lucide-react";
+import { 
+  CommandDialog, 
+  CommandEmpty, 
+  CommandGroup, 
+  CommandInput, 
+  CommandItem, 
+  CommandList 
 } from "../components/ui/command";
-import { useState, useEffect } from "react";
 import { Button } from "../components/ui/button";
-import { DEFAULT_PROMPTS } from "../lib/prompts";
+import { CommandSeparator } from "cmdk";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { formSchema } from "../lib/schema";
-import { z } from "zod";
-import { CommandSeparator } from "cmdk";
 
-type Store = {
-  promptType: string;
-  prompt: string;
-  response: string;
-  createdAt: string;
-  websiteURL: string;
-};
+import { DEFAULT_PROMPTS } from "../lib/prompts";
+import { formSchema } from "../lib/schema";
 
 const SOCIALS = [
   {
@@ -43,6 +35,27 @@ const SOCIALS = [
   },
 ];
 
+type Store = {
+  promptType: string;
+  prompt: string;
+  response: string;
+  createdAt: string;
+  websiteURL: string;
+};
+
+const SocialLinks = () => (
+  <div className="flex justify-center items-center gap-3 hover:text-gray-800">
+    {SOCIALS.map((social, i) => (
+      <div key={i} className="flex justify-center items-center gap-1">
+        <a href={social.handle} target="_blank" rel="noopener noreferrer">
+          {social.name}
+        </a>
+        <ArrowUpRight height={12} width={12} className="text-muted-foreground hover:text-gray-800" />
+      </div>
+    ))}
+  </div>
+);
+
 export const CommandModal = () => {
   const [open, setOpen] = useState(false);
   const [selectedText, setSelectedText] = useState("");
@@ -50,36 +63,15 @@ export const CommandModal = () => {
   const [buttonPosition, setButtonPosition] = useState({ top: 0, left: 0 });
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
-  const [websiteURL, setWebsiteURL] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [customPrompt, setCustomPrompt] = useState<string>("");
+  const [showCommands, setShowCommands] = useState(true);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      promptType: "",
-    },
-  });
-  const saveResponseToLocalStorage = (
-    response: string,
-    promptType: string,
-    selectedText: string,
-  ) => {
-    const store: Store = {
-      promptType,
-      prompt: selectedText,
-      response,
-      createdAt: new Date().toISOString(),
-      websiteURL: websiteURL,
-    };
-    localStorage.setItem("response", JSON.stringify(store));
-  };
-
-  const onSubmit = async ({ promptType }: z.infer<typeof formSchema>) => {
-    const storedSelectedText = localStorage.getItem("selectedText") || "";
-    // Debugging statement
-    console.log("Submitting with selectedText:", storedSelectedText);
-    setWebsiteURL(window.location.href);
+  const queryAI = async (promptType: string, prompt: string) => {
     setLoading(true);
     setResponse(null);
+    setError(null);
+
     try {
       const res = await fetch("http://localhost:8686/graphql", {
         method: "POST",
@@ -93,27 +85,51 @@ export const CommandModal = () => {
               askAI(promptType: $promptType, prompt: $prompt)
             }
           `,
-          variables: {
-            promptType: promptType,
-            prompt: storedSelectedText,
-          },
+          variables: { promptType, prompt },
         }),
       });
+
       const result = await res.json();
+      if (result.errors) {
+        throw new Error(result.errors[0].message);
+      }
+
+      saveResponseToLocalStorage(result.data.askAI, promptType, prompt);
       setResponse(result.data.askAI);
     } catch (error) {
       console.error("Error:", error);
-      setResponse("An error occurred. Please try again.");
+      setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  console.log(JSON.parse(localStorage.getItem("conversation") || "[]"));
+  const saveResponseToLocalStorage = (
+    response: string, 
+    promptType: string, 
+    prompt: string
+  ) => {
+    const store: Store = {
+      promptType,
+      prompt,
+      response,
+      createdAt: new Date().toISOString(),
+      websiteURL: window.location.href,
+    };
+  
+    const existingResponses = JSON.parse(localStorage.getItem("responses") || "[]");
+    existingResponses.push(store);
+    localStorage.setItem("responses", JSON.stringify(existingResponses));
+  };
 
   const handleCommandItemClick = (promptType: string) => {
-    form.setValue("promptType", promptType);
-    form.handleSubmit(onSubmit)();
+    const storedSelectedText = localStorage.getItem("selectedText") || "";
+    const finalPrompt = promptType === "CUSTOM_PROMPT" 
+      ? `${customPrompt} ${storedSelectedText}` 
+      : storedSelectedText;
+
+    queryAI(promptType, finalPrompt);
+    setShowCommands(false);
   };
 
   useEffect(() => {
@@ -123,6 +139,7 @@ export const CommandModal = () => {
         const selectedText = selection.toString();
         setSelectedText(selectedText);
         localStorage.setItem("selectedText", selectedText);
+
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         setButtonPosition({
@@ -159,19 +176,45 @@ export const CommandModal = () => {
 
   return (
     <>
-      {/* {showButton && (
+      {showButton && (
         <Button
           style={{ position: "absolute", top: buttonPosition.top, left: buttonPosition.left }}
           onClick={() => setOpen(true)}
           className="z-[1000]"
         >
-        <Sparkles height={4} width={4} className="text-violet-500/20" />  
+          <Sparkles />
         </Button>
-      )} */}
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Type a command or search..." />
+      )}
+      <CommandDialog
+        open={open}
+        onOpenChange={(isOpen) => {
+          setOpen(isOpen);
+          if (!isOpen) {
+            setResponse(null);
+            setError(null);
+            setCustomPrompt("");
+            setShowCommands(true);
+          }
+        }}
+      >
+        {showCommands ? (
+          <CommandInput
+          placeholder="Type a command or search..."
+        />
+        ) : (
+          <Button onClick={() => {
+            setResponse(null);
+            setError(null);
+            setShowCommands(true);
+          }} className="m-4">
+            <ArrowLeft className="mr-2" /> Back to Commands
+          </Button>
+        )}
+
         {loading ? (
           <div className="p-4">AI is typing...</div>
+        ) : error ? (
+          <div className="p-4 text-red-500">{error}</div>
         ) : response ? (
           <article className="p-4 prose">{response}</article>
         ) : (
@@ -194,17 +237,19 @@ export const CommandModal = () => {
             </CommandGroup>
           </CommandList>
         )}
+
         <CommandSeparator />
         <div className="text-sm border-t px-4 py-1 text-muted-foreground flex justify-between items-center">
           <span>Developed By Mahendra</span>
-          <div className="flex justify-center items-center gap-3 hover:text-gray-800">{SOCIALS.map((social,i)=>(
-            <div className="flex justify-center items-center gap-1">
-              <a key={i} href={social.handle} target="_blank">{social.name}</a>
-              <ArrowUpRight height={12} width={12} className="text-muted-foreground hover:text-gray-800" />
-            </div>
-          ))}</div>
+          <SocialLinks />
         </div>
       </CommandDialog>
     </>
   );
 };
+
+/*
+ Error in line 212-215 
+ 1. Every time CUSTOM_PROMPT is hit
+ 2. In custom prompt only selected text is passed in API not the written prompt in modal
+*/
