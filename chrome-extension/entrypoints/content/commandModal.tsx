@@ -66,6 +66,7 @@ export const CommandModal = () => {
   const [error, setError] = useState<string | null>(null);
   const [customPrompt, setCustomPrompt] = useState<string>("");
   const [showCommands, setShowCommands] = useState(true);
+  const [showCustomPromptInput, setShowCustomPromptInput] = useState(false);
 
   const queryAI = async (promptType: string, prompt: string) => {
     setLoading(true);
@@ -125,7 +126,7 @@ export const CommandModal = () => {
   const handleCommandItemClick = (promptType: string) => {
     const storedSelectedText = localStorage.getItem("selectedText") || "";
     const finalPrompt = promptType === "CUSTOM_PROMPT" 
-      ? `${customPrompt} ${storedSelectedText}` 
+      ? `${storedSelectedText} ${customPrompt}` 
       : storedSelectedText;
 
     queryAI(promptType, finalPrompt);
@@ -162,6 +163,7 @@ export const CommandModal = () => {
         setSelectedText("");
         setResponse(null);
         setOpen(false);
+        setShowCustomPromptInput(false);
       }
     };
 
@@ -197,6 +199,31 @@ export const CommandModal = () => {
           }
         }}
       >
+        {showCustomPromptInput ? 
+        <div>
+        <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+          <input
+            placeholder="Type a custom prompt..."
+            className={
+              "flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                // call api for custom prompt
+                handleCommandItemClick("CUSTOM_PROMPT");
+                setShowCustomPromptInput(false);
+          console.log(e.currentTarget.value);
+              }
+            }}
+          />
+        </div>
+
+        <div className="px-3 py-2 text-sm text-muted-foreground">
+          {selectedText}
+        </div>
+        
+        </div>
+        :
+        <div>
         {showCommands ? (
           <CommandInput
           placeholder="Type a command or search..."
@@ -220,6 +247,19 @@ export const CommandModal = () => {
         ) : (
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup heading="Custom">
+              <CommandItem
+                onSelect={() => setShowCustomPromptInput(true) }
+              >
+              <Sparkles
+                    height={4}
+                    width={4}
+                    className="text-violet-500/20"
+                  />
+                  <span>Write a custom prompt</span>
+
+              </CommandItem>
+              </CommandGroup>
             <CommandGroup heading="Suggestions">
               {DEFAULT_PROMPTS.map((prompt, i) => (
                 <CommandItem
@@ -238,6 +278,8 @@ export const CommandModal = () => {
           </CommandList>
         )}
 
+        </div>
+        }
         <CommandSeparator />
         <div className="text-sm border-t px-4 py-1 text-muted-foreground flex justify-between items-center">
           <span>Developed By Mahendra</span>
@@ -249,7 +291,10 @@ export const CommandModal = () => {
 };
 
 /*
- Error in line 212-215 
- 1. Every time CUSTOM_PROMPT is hit
- 2. In custom prompt only selected text is passed in API not the written prompt in modal
+TODO
+- [x] Custom prompt and default prompt working
+- [x] store all conversation in localstorage
+- [ ] disable text selection event when modal's 
+- [ ] make a common UI for showing AI response for both default and custom prompt
+- [ ] add a command to show history which shows previous conversations for that particular website
 */

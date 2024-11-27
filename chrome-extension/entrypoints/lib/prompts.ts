@@ -22,5 +22,5 @@ export const DEFAULT_PROMPTS = [
   {
     promptType: "REPHRASE_FOR_REFERENCE",
     text: "Rephrase to use as a reference",
-  },
+  }
 ];
