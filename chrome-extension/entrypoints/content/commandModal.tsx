@@ -99,7 +99,7 @@ export const CommandModal = () => {
       setResponse(result.data.askAI);
     } catch (error) {
       console.error("Error:", error);
-      setError("An error occurred. Please try again.");
+      setError("Oops! Someting went wrong please try again!");
     } finally {
       setLoading(false);
     }
@@ -224,26 +224,26 @@ export const CommandModal = () => {
         </div>
         :
         <div>
-        {showCommands ? (
+
           <CommandInput
+          showBackButton={true}
           placeholder="Type a command or search..."
         />
-        ) : (
-          <Button onClick={() => {
-            setResponse(null);
-            setError(null);
-            setShowCommands(true);
-          }} className="m-4">
-            <ArrowLeft className="mr-2" /> Back to Commands
-          </Button>
-        )}
-
         {loading ? (
-          <div className="p-4">AI is typing...</div>
+          <div className="w-full p-2 text-sm text-center">AI is typing...</div>
         ) : error ? (
-          <div className="p-4 text-red-500">{error}</div>
+          <div className="w-full p-2 text-sm text-center text-red-500">{error}</div>
         ) : response ? (
-          <article className="p-4 prose">{response}</article>
+          <section className="p-2 space-y-1 text-sm">
+            <div>
+              <div className="text-muted-foreground">Text</div>
+              <div className="text-secondary-foreground">{selectedText.slice(0,100)} {"..."}</div>
+            </div>
+            <div>
+              <div className="text-muted-foreground">AI</div>
+              <div className="">{response}</div>
+            </div>
+          </section>
         ) : (
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
@@ -294,7 +294,7 @@ export const CommandModal = () => {
 TODO
 - [x] Custom prompt and default prompt working
 - [x] store all conversation in localstorage
-- [ ] disable text selection event when modal's 
-- [ ] make a common UI for showing AI response for both default and custom prompt
+- [ ] disable text selection event when modal's -> tried but didn't work
+- [x] make a common UI for showing AI response for both default and custom prompt - error, loading and success states
 - [ ] add a command to show history which shows previous conversations for that particular website
 */
