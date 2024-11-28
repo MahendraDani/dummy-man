@@ -31,7 +31,7 @@ const SOCIALS = [
   {
     name: "GitHub",
     username: "@MahendraDani",
-    handle: "https://github.com/MahendraDani",
+    handle: "https://github.com/MahendraDani/snipy",
   },
   {
     name: "Linkedin",

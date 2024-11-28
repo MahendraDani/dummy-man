@@ -20,6 +20,10 @@ export const DEFAULT_PROMPTS = [
     text: "Write a short summary",
   },
   {
+    promptType: "SINGLE_PARAGRAPH",
+    text: "Rewrite in a single paragraph",
+  },
+  {
     promptType: "REPHRASE_FOR_REFERENCE",
     text: "Rephrase to use as a reference",
   }

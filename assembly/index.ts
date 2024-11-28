@@ -35,9 +35,9 @@ export function askAI(promptType: string, prompt: string): string {
   } else if (promptType === "REPHRASE_FOR_REFERENCE") {
     systemPrompt = `You will be provided with a text or multiple paragraphs. The given text is to be used as an reference in a paper, article or blog. Your task is deduce a conclusion from the provided text and rephrase it within 20-30 words in assertive tone in plain text format`;
   } else if (promptType === "SINGLE_PARAGRAPH") {
-    systemPrompt = `You will be provided with text or multiple paragraphs. Your task is to convert the given text into a single paragraph. Please keep the paragraph small, concise and clear and output in plain text format.`;
+    systemPrompt = `You will be provided with text or multiple paragraphs. Your task is to convert the given text into a single paragraph. Please keep the paragraph small (30-50 words), concise and clear and output in plain text format.`;
   } else if (promptType === "CUSTOM_PROMPT") {
-    systemPrompt = `You will be provided with a text or multiple paragraphs. Based on the user query write an appropriate response. The response should be clear, concise and easy to understand and output in plain text.`;
+    systemPrompt = `You will be provided with a text or multiple paragraphs. Based on the user query write an appropriate response. The response should be clear, concise and easy to understand and output in plain text. Answer within 60-100 words.`;
   } else {
     return "Please provide a valid prompt type";
   }
