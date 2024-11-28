@@ -64,7 +64,7 @@ export const CommandModal = () => {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [customPrompt, setCustomPrompt] = useState<string>("");
+  // const [customPrompt, setCustomPrompt] = useState<string>("");
   const [showCommands, setShowCommands] = useState(true);
   const [showCustomPromptInput, setShowCustomPromptInput] = useState(false);
 
@@ -125,11 +125,11 @@ export const CommandModal = () => {
 
   const handleCommandItemClick = (promptType: string) => {
     const storedSelectedText = localStorage.getItem("selectedText") || "";
-    const finalPrompt = promptType === "CUSTOM_PROMPT" 
-      ? `${storedSelectedText} ${customPrompt}` 
-      : storedSelectedText;
+    const storedCustomPrompt = localStorage.getItem("customPrompt");
+    const finalPrompt = `${storedSelectedText} ${storedCustomPrompt}`;
 
     queryAI(promptType, finalPrompt);
+    localStorage.setItem("customPrompt", "");
     setShowCommands(false);
   };
 
@@ -194,7 +194,7 @@ export const CommandModal = () => {
           if (!isOpen) {
             setResponse(null);
             setError(null);
-            setCustomPrompt("");
+            // setCustomPrompt("");
             setShowCommands(true);
           }
         }}
@@ -209,6 +209,8 @@ export const CommandModal = () => {
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 // call api for custom prompt
+                // setCustomPrompt(e.currentTarget.value);
+                localStorage.setItem("customPrompt",e.currentTarget.value);
                 handleCommandItemClick("CUSTOM_PROMPT");
                 setShowCustomPromptInput(false);
           console.log(e.currentTarget.value);
@@ -294,6 +296,7 @@ export const CommandModal = () => {
 TODO
 - [x] Custom prompt and default prompt working
 - [x] store all conversation in localstorage
+- [x] Custom prompt is not getting throught API call
 - [ ] disable text selection event when modal's -> tried but didn't work
 - [x] make a common UI for showing AI response for both default and custom prompt - error, loading and success states
 - [ ] add a command to show history which shows previous conversations for that particular website
