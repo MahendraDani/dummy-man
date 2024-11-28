@@ -14,12 +14,12 @@ export function askAI(promptType: string, prompt: string): string {
   if (promptType === "EXPLAIN_LIKE_FIVE") {
     systemPrompt = `You will be provided with a text or multiple paragraphs.
        Your task is to explain the text to a person who has minimal or no knowledge of the subject.
-       Use a friendly tone and explain the answer within 100-150 words. 
+       Use a friendly tone and explain the answer within 50-80 words in plain text format. 
        Please use examples and analogies or comparisons to explain the topic in a more concise and clear way.`;
   } else if (promptType === "EXPLAIN_TOPIC") {
     systemPrompt = `You will be provided with a text or multiple paragraphs. 
       Your task is to understand the text and extract the core subject or topic.
-      Explain the core subject or topic in 100-150 words briefly, providing examples and analogies.`;
+      Explain the core subject or topic in 40-60 words briefly, providing examples and analogies and return the output in plain text format. `;
   } else if (promptType === "LIST_TAKEAWAYS") {
     systemPrompt = `You will be provided with a text or paragraph. Follow these steps to answer the user queries.
         Step 1: First understand the context, subject, tone and style of writing in the provided text.
@@ -29,15 +29,15 @@ export function askAI(promptType: string, prompt: string): string {
   } else if (promptType === "LONG_SUMMARY") {
     systemPrompt = `You will be provided with a text or multiple paragraphs. 
     Please summarise the provided text based on the subject and topics 
-    explained in the text within 200-250 words. Explain the core topics in-depth and how they are used in the provided text. The summary should be in-depth and detailed based on the context provided in the text. Please provide bullet-points and analogies if necessary for better understanding.`;
+    explained in the text within 100-150 words. Explain the core topics in-depth and how they are used in the provided text. The summary should be in-depth and detailed based on the context provided in the text. Please provide bullet-points and analogies if necessary for better understanding in plain text format.`;
   } else if (promptType === "SHORT_SUMMARY") {
-    systemPrompt = `You will be provided with a text or multiple paragraphs. Please summarise the provided text based on the subject and topics explained in the text within 30-50 words. The summary should be short, concise and easy to understand.`;
+    systemPrompt = `You will be provided with a text or multiple paragraphs. Please summarise the provided text based on the subject and topics explained in the text within 30-50 words in plain text format. The summary should be short, concise and easy to understand.`;
   } else if (promptType === "REPHRASE_FOR_REFERENCE") {
-    systemPrompt = `You will be provided with a text or multiple paragraphs. The given text is to be used as an reference in a paper, article or blog. Your task is deduce a conclusion from the provided text and rephrase it within 20-30 words in assertive tone.`;
+    systemPrompt = `You will be provided with a text or multiple paragraphs. The given text is to be used as an reference in a paper, article or blog. Your task is deduce a conclusion from the provided text and rephrase it within 20-30 words in assertive tone in plain text format`;
   } else if (promptType === "SINGLE_PARAGRAPH") {
-    systemPrompt = `You will be provided with text or multiple paragraphs. Your task is to convert the given text into a single paragraph. Please keep the paragraph small, concise and clear.`;
+    systemPrompt = `You will be provided with text or multiple paragraphs. Your task is to convert the given text into a single paragraph. Please keep the paragraph small, concise and clear and output in plain text format.`;
   } else if (promptType === "CUSTOM_PROMPT") {
-    systemPrompt = `You will be provided with a text or multiple paragraphs. Based on the user query write an appropriate response. The response should be clear, concise and easy to understand.`;
+    systemPrompt = `You will be provided with a text or multiple paragraphs. Based on the user query write an appropriate response. The response should be clear, concise and easy to understand and output in plain text.`;
   } else {
     return "Please provide a valid prompt type";
   }

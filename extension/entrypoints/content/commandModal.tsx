@@ -244,9 +244,12 @@ export const CommandModal = ({
               />
             </div>
 
-            <div className="px-3 py-2 text-sm text-muted-foreground">
-              {selectedText}
-            </div>
+            <section className="p-2 space-y-1 text-sm">
+              <div className="text-muted-foreground">Prompt</div>
+              <div className="text-foreground/80">
+                {selectedText.slice(0, 200)} {"..."}
+              </div>
+            </section>
           </div>
         ) : (
           <div>
@@ -257,8 +260,8 @@ export const CommandModal = ({
             {loading ? (
               <section className="p-2 space-y-1 text-sm">
                 <div>
-                  <div className="text-sm text-muted-foreground">Prompt</div>
-                  <div className="text-sm text-foreground/80">
+                  <div className="text-muted-foreground">Prompt</div>
+                  <div className="text-foreground/80">
                     {selectedText.slice(0, 200)} {"..."}
                   </div>
                 </div>
@@ -282,11 +285,11 @@ export const CommandModal = ({
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">AI</div>
-                  <div className="text-foreground">
+                  <div className="text-sm text-foreground">
                     {response.split(" ").map((word, i) => (
                       <motion.span
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 1, }}
+                        animate={{ opacity: 1 }}
                         transition={{ delay: 0.05 * i }}
                         key={i}
                       >
