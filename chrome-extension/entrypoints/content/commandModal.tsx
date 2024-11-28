@@ -232,14 +232,24 @@ export const CommandModal = () => {
           placeholder="Type a command or search..."
         />
         {loading ? (
-          <div className="w-full p-2 text-sm text-center">AI is typing...</div>
+          <section className="p-2 space-y-1 text-sm">
+          <div>
+            <div className="text-muted-foreground">Text</div>
+            <div className="text-secondary-foreground">{selectedText.slice(0,200)} {"..."}</div>
+          </div>
+          <div>
+              <div className="text-muted-foreground">AI</div>
+              <div className="">{"AI is typing..."}</div>
+            </div>
+        </section>
+          // <div className="w-full p-2 text-sm text-center">AI is typing...</div>
         ) : error ? (
           <div className="w-full p-2 text-sm text-center text-red-500">{error}</div>
         ) : response ? (
           <section className="p-2 space-y-1 text-sm">
             <div>
               <div className="text-muted-foreground">Text</div>
-              <div className="text-secondary-foreground">{selectedText.slice(0,100)} {"..."}</div>
+              <div className="text-secondary-foreground">{selectedText.slice(0,200)} {"..."}</div>
             </div>
             <div>
               <div className="text-muted-foreground">AI</div>
