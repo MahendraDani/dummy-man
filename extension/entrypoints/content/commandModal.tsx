@@ -24,6 +24,7 @@ import { useForm } from "react-hook-form";
 
 import { DEFAULT_PROMPTS } from "../lib/prompts";
 import { formSchema } from "../lib/schema";
+import { CopyButton } from "../components/ui/copy-button";
 // import { ModeToggle } from "../components/ui/mode-toggle";
 
 const SOCIALS = [
@@ -266,7 +267,10 @@ export const CommandModal = ({
                   </div>
                 </div>
                 <div>
+                  <div className="flex justify-between items-center">
                   <div className="text-muted-foreground">AI</div>
+                  <CopyButton codeString={response ?? ""}/>
+                  </div>
                   <div className="">{"AI is typing..."}</div>
                 </div>
               </section>
@@ -284,7 +288,12 @@ export const CommandModal = ({
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">AI</div>
+                <div>
+                  <div className="flex justify-between items-center">
+                  <div className="text-muted-foreground">AI</div>
+                  <CopyButton codeString={response ?? ""}/>
+                  </div>
+                </div>
                   <div className="text-sm text-foreground">
                     {response.split(" ").map((word, i) => (
                       <motion.span
