@@ -7,6 +7,7 @@ import {
   Moon,
   Sun,
 } from "lucide-react";
+import { motion } from "motion/react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -256,8 +257,8 @@ export const CommandModal = ({
             {loading ? (
               <section className="p-2 space-y-1 text-sm">
                 <div>
-                  <div className="text-muted-foreground">Text</div>
-                  <div className="text-secondary-foreground">
+                  <div className="text-sm text-muted-foreground">Prompt</div>
+                  <div className="text-sm text-foreground/80">
                     {selectedText.slice(0, 200)} {"..."}
                   </div>
                 </div>
@@ -272,16 +273,27 @@ export const CommandModal = ({
                 {error}
               </div>
             ) : response ? (
-              <section className="p-2 space-y-1 text-sm">
+              <section className="p-2 space-y-1">
                 <div>
-                  <div className="text-muted-foreground">Text</div>
-                  <div className="text-secondary-foreground">
+                  <div className="text-sm text-muted-foreground">Prompt</div>
+                  <div className="text-sm text-foreground/80">
                     {selectedText.slice(0, 200)} {"..."}
                   </div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground">AI</div>
-                  <div className="">{response}</div>
+                  <div className="text-sm text-muted-foreground">AI</div>
+                  <div className="text-foreground">
+                    {response.split(" ").map((word, i) => (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1, }}
+                        transition={{ delay: 0.05 * i }}
+                        key={i}
+                      >
+                        {word}{" "}
+                      </motion.span>
+                    ))}
+                  </div>
                 </div>
               </section>
             ) : (
@@ -313,9 +325,11 @@ export const CommandModal = ({
                   ))}
                 </CommandGroup>
                 <CommandGroup heading="Theme">
-                  <CommandItem onSelect={()=>{
-                    theme === "dark" ? setTheme("light") : setTheme("dark")
-                  }}>
+                  <CommandItem
+                    onSelect={() => {
+                      theme === "dark" ? setTheme("light") : setTheme("dark");
+                    }}
+                  >
                     {theme === "dark" ? (
                       <Moon
                         height={4}
