@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ArrowUpRight, Sparkles, ArrowLeft } from "lucide-react";
+import { ArrowUpRight, Sparkles, ArrowLeft, MessageSquare } from "lucide-react";
 import { 
   CommandDialog, 
   CommandEmpty, 
@@ -64,8 +64,7 @@ export const CommandModal = () => {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  // const [customPrompt, setCustomPrompt] = useState<string>("");
-  const [showCommands, setShowCommands] = useState(true);
+  // const [showCommands, setShowCommands] = useState(true);
   const [showCustomPromptInput, setShowCustomPromptInput] = useState(false);
 
   const queryAI = async (promptType: string, prompt: string) => {
@@ -130,7 +129,6 @@ export const CommandModal = () => {
 
     queryAI(promptType, finalPrompt);
     localStorage.setItem("customPrompt", "");
-    setShowCommands(false);
   };
 
   useEffect(() => {
@@ -194,8 +192,6 @@ export const CommandModal = () => {
           if (!isOpen) {
             setResponse(null);
             setError(null);
-            // setCustomPrompt("");
-            setShowCommands(true);
           }
         }}
       >
@@ -226,7 +222,6 @@ export const CommandModal = () => {
         </div>
         :
         <div>
-
           <CommandInput
           showBackButton={true}
           placeholder="Type a command or search..."
@@ -289,7 +284,6 @@ export const CommandModal = () => {
             </CommandGroup>
           </CommandList>
         )}
-
         </div>
         }
         <CommandSeparator />
@@ -309,5 +303,5 @@ TODO
 - [x] Custom prompt is not getting throught API call
 - [ ] disable text selection event when modal's -> tried but didn't work
 - [x] make a common UI for showing AI response for both default and custom prompt - error, loading and success states
-- [ ] add a command to show history which shows previous conversations for that particular website
+- [ ] add a command to show history which shows previous conversations for that particular website -> skip
 */
