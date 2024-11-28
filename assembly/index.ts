@@ -6,10 +6,6 @@ import {
   UserMessage,
 } from "@hypermode/modus-sdk-as/models/openai/chat";
 
-export function sayHello(name: string): string {
-  return `Welcome Chief! ${name}!`;
-}
-
 const modelName: string = "text-generator";
 export function askAI(promptType: string, prompt: string): string {
   const model = models.getModel<OpenAIChatModel>(modelName);
