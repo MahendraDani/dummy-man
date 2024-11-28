@@ -57,3 +57,23 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted-foreground) var(--background);
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--muted-foreground);
+  border-radius: 20px;
+  border: 3px solid var(--background);
+}
