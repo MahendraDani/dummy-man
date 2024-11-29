@@ -44,11 +44,8 @@ We provide support for seved default commands as well as your own custom prompts
 | Rewrite in a single paragraph | You will be provided with text or multiple paragraphs. Your task is to convert the given text into a single paragraph. Please keep the paragraph small (30-50 words), concise and clear and output in plain text format. | `SINGLE_PARAGRAPH` | 
 | Write a custom prompt | You will be provided with a text or multiple paragraphs. Based on the user query write an appropriate response. The response should be clear, concise and easy to understand and output in plain text. Answer within 60-100 words. | `CUSTOM_PROMPT` | 
 
-# Installation
+# Installation and Self Hosting
 
-Please follow the installation guide written in [INSTALLATION.md](/INSTALLATION.md) to setup the project locally and self host using your own [Hypermode](https://hypermode.com/) account.
-
-# Guide for Slef Hosting Snipy AI
 This guide explains all the steps required to setup the project locally and self host using your own [Hypermode](https://hypermode.com/) account.
 
 1. Fork and clone this repository on your computer
