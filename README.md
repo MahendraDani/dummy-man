@@ -12,12 +12,6 @@ By utilising Meta Llama 3.1 through Modus and Hypermode's infrastructure, this e
 - GraphQL API - Modus, Hypermode, Meta Llama 3.1
 - Demo Video : https://youtu.be/aNhvGUf8-JU
 
-**Demo Video :**
-
-<!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/aNhvGUf8-JU?si=4ahL8cNfVZ5szJyp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> -->
-
-[![SnipyAI Launch Video](http://img.youtube.com/vi/aNhvGUf8-JU/0.jpg)](http://www.youtube.com/watch?v=aNhvGUf8-JU "Introducing SnipyAI : If Reading was easier and LLMs could help with just Cmd + K")
-
 # Blog Series
 As this project was developed in a month-long hackathon, [ModusHack](https://hashnode.com/hackathons/hypermode?source=hackathon-feed-widget) hosted by Hashnode and Hypermode, I published a series of blog post throughout the month explaining the idea generation, decision making and development process : 
 
